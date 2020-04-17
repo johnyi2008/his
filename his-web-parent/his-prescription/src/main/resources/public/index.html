@@ -19,6 +19,7 @@
     分类：<input name="typeId" VALUE="1"><br/>
     名称：<input name="name" VALUE="化"><br/>
     <button type="button" id="btnSubmit">查询药品</button>
+    <button type="button" id="btnPostSubmit">post查询药品</button>
 </form>
 <div id="data">
     <h4>ajax获取的药品模块分页数据如下</h4>
@@ -54,7 +55,32 @@
                 }
             })
         });
-
+        $("#btnPostSubmit").click(function () {
+            var data = {
+                pageNum:$("[name=pageNum]").val(),
+                pageSize:$("[name=pageSize]").val(),
+                typeId:$("[name=typeId]").val(),
+                name:$("[name=name]").val()
+            }
+            $.ajax({
+                url: 'api/getMedicines/findByPost',
+                data: data,
+                type: 'get',
+                dataType: 'json',
+                success: function (result) {
+                    result = result.responseBody;
+                    $("#pageInfo").html("总记录数：" + result.total + ",总页数：" + result.pages + ",当前页:" + result.pageNum);
+                    $("#list").html("");
+                    $.each(result.list,function(i, item) {
+                        $("#list").append("<li>"+JSON.stringify(item)+"</li>");
+                    });
+                },
+                error: function(xhr) {
+                    console.log(xhr);
+                    alert('加载数据错误');
+                }
+            })
+        });
     })
 </script>
 </body>
