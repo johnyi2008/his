@@ -1,18 +1,15 @@
 package cn.bdqn.his.prescription.controller;
 
-import cn.bdqn.his.common.http.HttpClientHelper;
-import cn.bdqn.his.common.response.Response;
-import cn.bdqn.his.common.response.ResponseEnum;
-import cn.bdqn.his.prescription.dto.DemoDto;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import lombok.Data;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.apache.http.Header;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -21,25 +18,27 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import cn.bdqn.his.common.CusomCsrfMatcher;
+import cn.bdqn.his.common.http.HttpClientHelper;
+import cn.bdqn.his.common.response.Response;
+import cn.bdqn.his.common.response.ResponseEnum;
+import cn.bdqn.his.prescription.dto.DemoDto;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 
 @Api
 @RestController
@@ -50,6 +49,7 @@ public class PrescriptionController {
     private String serverMedicineUrl;
     @Value("${server.masterdata.url}")
     private String serverMasterdataUrl;
+    private static final String CURRENT_SERVER_URL = "http://localhost:9005";
     @Resource
     private HttpClientHelper httpClientHelper;
     
@@ -99,25 +99,27 @@ public class PrescriptionController {
         params.put("pageSize", pageSize);
         params.put("typeId", typeId);
         params.put("name", name);
-        CsrfToken _csrf = (CsrfToken) request.getAttribute("_csrf");
-        params.put(_csrf.getParameterName(), _csrf.getToken());
+        //这个没有用,这是保护自己不被跨域攻击的csrftoken,发送到目标服务器还是会被报csrf无效
+        //除非先发一个get请求到目标服务器获取对应的csrftoken再传回去
+//        CsrfToken _csrf = (CsrfToken) request.getAttribute("_csrf");
+//        params.put(_csrf.getParameterName(), _csrf.getToken());
         log.debug("params:{}", params);
-        ///
-        CloseableHttpClient  httpClient = HttpClientBuilder.create()
-        		.setRedirectStrategy(new LaxRedirectStrategy()).build();
+        CloseableHttpClient  httpClient = HttpClientBuilder.create().build();
 		CloseableHttpResponse  response = null;
 		try {
 			String ssoCookies = (String) request.getAttribute("ssoCookies");
 			HttpPost httpPost = new HttpPost(serverMedicineUrl + "/api/medicines/findBy");
-			httpPost.addHeader("Cookie", ssoCookies);
-			//
+			httpPost.setHeader("User-Agent","Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0");
+			httpPost.setHeader("Cookie", ssoCookies);
+			//被调用的服务器默认spring security会阻止post跨站访问
+            //在被调用的服务器security配置中加入了允许的主机地址
+			httpPost.setHeader(CusomCsrfMatcher.HEADER_NAME, CURRENT_SERVER_URL);
 			List<NameValuePair> nameValuePairs = new ArrayList<>();
 			params.forEach((k,v) -> {
 				if(v != null) {
 					nameValuePairs.add(new BasicNameValuePair(k, v.toString()));
 				}
 			});
-			httpPost.setHeader("User-Agent","Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0");
 			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs,StandardCharsets.UTF_8));
 			response = httpClient.execute(httpPost);
 			HttpEntity httpEntity = response.getEntity();

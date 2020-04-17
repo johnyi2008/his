@@ -11,10 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
  
 public class CsrfHeaderFilter extends OncePerRequestFilter {
- 
+	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
- 
+		//把csrf token加入到授权服务器（9001）的响应
 		CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
 		if (csrf != null) {
 			Cookie cookie = WebUtils.getCookie(request, "CSRF-TOKEN");

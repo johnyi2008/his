@@ -14,6 +14,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -76,5 +78,11 @@ public class DemoController {
 	@GetMapping("api/medicine/users")
 	public Response getUsers() {
 		return httpClientHelper.getForResponse(serverMedicineUrl + "/api/medicine/users");
+	}
+	
+	@GetMapping("api/prescription/user")
+	public Response user() {
+		 Authentication user = SecurityContextHolder.getContext().getAuthentication();
+		return new Response(ResponseEnum.SUCCESS).setResponseBody(user);
 	}
 }

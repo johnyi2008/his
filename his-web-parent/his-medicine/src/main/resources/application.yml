@@ -1,0 +1,67 @@
+csrf:
+  allowed:
+    server:
+      urls:
+      - http://localhost:9005
+      - http://localhost:9006
+      - http://localhost:9007
+logging:
+  level:
+    cn:
+      bdqn:
+        his:
+          medicine: debug
+    org:
+      springframework:
+        security: debug
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: cn.bdqn.his.medicine.entity
+oauth2:
+  server:
+    url: http://localhost:9001
+security:
+  oauth2:
+    client:
+      access-token-uri: ${oauth2.server.url}/oauth/token
+      client-id: client1
+      client-secret: secret
+      user-authorization-uri: ${oauth2.server.url}/oauth/authorize
+    resource:
+      token-info-uri: ${oauth2.server.url}/oauth/check_token
+    sso:
+      login-path: /login
+server:
+  port: 9006
+  servlet:
+    session:
+      cookie:
+        name: OAUTH2SESSION1
+spring:
+  application:
+    name: his-medicine
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1
+      initial-size: 3
+      max-active: 10
+      max-wait: 60000
+      min-idle: 3
+      stat-view-servlet:
+        login-password: admin
+        login-username: admin
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/his_medicine?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
+    username: his
+  session:
+    timeout: 3600000
+swagger2:
+  enable: true
+  title: 药品模块
