@@ -1,19 +1,21 @@
 package cn.bdqn.his.medicine.controller;
 
-import cn.bdqn.his.common.response.Response;
-import cn.bdqn.his.common.response.ResponseEnum;
-import cn.bdqn.his.medicine.entity.Medicine;
-import cn.bdqn.his.medicine.service.MedicineService;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.Api;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+
+import cn.bdqn.his.common.response.Response;
+import cn.bdqn.his.common.response.ResponseEnum;
+import cn.bdqn.his.medicine.entity.Medicine;
+import cn.bdqn.his.medicine.service.MedicineService;
+import io.swagger.annotations.Api;
 
 @Api
 @RestController

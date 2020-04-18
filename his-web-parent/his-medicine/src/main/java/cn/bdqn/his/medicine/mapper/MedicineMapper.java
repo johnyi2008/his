@@ -1,11 +1,11 @@
 package cn.bdqn.his.medicine.mapper;
 
-import cn.bdqn.his.medicine.entity.Medicine;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.security.core.parameters.P;
 
-import java.util.List;
+import cn.bdqn.his.medicine.entity.Medicine;
 
 @Mapper
 public interface MedicineMapper {

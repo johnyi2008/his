@@ -3,8 +3,6 @@ csrf:
     server:
       urls:
       - http://localhost:9005
-      - http://localhost:9006
-      - http://localhost:9007
 logging:
   level:
     cn:

@@ -1,10 +1,11 @@
 package cn.bdqn.his.authserver.mapper;
 
-import cn.bdqn.his.authserver.domain.TbPermission;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import cn.bdqn.his.authserver.domain.TbPermission;
 
 /**
  * (TbPermission)表数据库访问层

@@ -1,37 +1,32 @@
 package cn.bdqn.his.common.http;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.HttpClientUtils;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.LaxRedirectStrategy;
-import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import cn.bdqn.his.common.response.Response;
-import cn.bdqn.his.common.response.ResponseEnum;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import cn.bdqn.his.common.CusomCsrfMatcher;
+import cn.bdqn.his.common.response.Response;
+import cn.bdqn.his.common.response.ResponseEnum;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
@@ -86,32 +81,29 @@ public class HttpClientHelper {
 	 * @param uri
 	 * @return
 	 */
-	public Response postForResponse(String uri, Map<String, Object> params) {
+	public Response postForResponse(String uri, Map<String, Object> params, String originServerUrl) {
 		CloseableHttpClient  httpClient = HttpClientBuilder.create().build();
 		CloseableHttpResponse  response = null;
 		try {
-			String ssoCookies = (String) request.getAttribute("ssoCookies");
 			HttpPost httpPost = new HttpPost(uri);
-			httpPost.addHeader("Cookie", ssoCookies);
-			//
+			String ssoCookies = (String) request.getAttribute("ssoCookies");
+			httpPost.setHeader("User-Agent","Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0");
+			httpPost.setHeader("Cookie", ssoCookies);
+			//被调用服务器的spring security csrf过滤器默认会阻止post跨站访问
+            //在被调用的服务器配置文件中加入了信任的主机地址
+			httpPost.setHeader(CusomCsrfMatcher.HEADER_NAME, originServerUrl);
+			
 			List<NameValuePair> nameValuePairs = new ArrayList<>();
 			params.forEach((k,v) -> {
 				if(v != null) {
 					nameValuePairs.add(new BasicNameValuePair(k, v.toString()));
 				}
 			});
-			httpPost.setHeader("User-Agent","Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0");
 			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 			response = httpClient.execute(httpPost);
 			HttpEntity httpEntity = response.getEntity();
-			//授权过期,需要用户重新授权
-			Header contentType = (Header) response.headerIterator("Content-Type").next();
-			if(contentType.getValue().startsWith("text/html")) {//请求授权页面
-				return new Response(ResponseEnum.ERROR).setResponseBody("调用目标的授权已经失效，请先重新获取授权<a href='"+uri+"'>授权</a>");
-			}
-			String result = null;
 			if(httpEntity != null) {
-				result = EntityUtils.toString(httpEntity);
+				String result = EntityUtils.toString(httpEntity);
 				if(log.isDebugEnabled()) {
 					log.debug("响应内容：{}",result);
 				}

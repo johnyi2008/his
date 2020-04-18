@@ -1,11 +1,12 @@
 package cn.bdqn.his.authserver.service;
 
-import cn.bdqn.his.authserver.domain.TbPermission;
-import cn.bdqn.his.authserver.mapper.TbPermissionMapper;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import cn.bdqn.his.authserver.domain.TbPermission;
+import cn.bdqn.his.authserver.mapper.TbPermissionMapper;
 
 @Service
 public class TbPermissionService {

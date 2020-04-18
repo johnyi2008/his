@@ -1,17 +1,19 @@
 package cn.bdqn.his.medicine.service;
 
-import cn.bdqn.his.medicine.entity.Medicine;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+
+import javax.annotation.Resource;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.annotation.Resource;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 
-import java.util.List;
+import cn.bdqn.his.medicine.entity.Medicine;
+import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)

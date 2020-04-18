@@ -1,8 +1,8 @@
 package cn.bdqn.his.medicine.service;
 
-import cn.bdqn.his.medicine.entity.Medicine;
-
 import java.util.List;
+
+import cn.bdqn.his.medicine.entity.Medicine;
 
 public interface MedicineService {
     List<Medicine> findAll();

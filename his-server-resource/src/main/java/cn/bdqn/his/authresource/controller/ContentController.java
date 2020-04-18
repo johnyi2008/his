@@ -1,13 +1,14 @@
 package cn.bdqn.his.authresource.controller;
 
-import cn.bdqn.his.authresource.domain.TbContent;
-import cn.bdqn.his.authresource.service.ContentService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import cn.bdqn.his.authresource.domain.TbContent;
+import cn.bdqn.his.authresource.service.ContentService;
 
 /**
  * 允许第三方应用调用的api

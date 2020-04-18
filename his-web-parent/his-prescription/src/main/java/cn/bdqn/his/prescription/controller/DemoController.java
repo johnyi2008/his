@@ -1,8 +1,5 @@
 package cn.bdqn.his.prescription.controller;
 
-import io.swagger.annotations.Api;
-import lombok.extern.slf4j.Slf4j;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.http.HttpEntity;
@@ -24,6 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cn.bdqn.his.common.http.HttpClientHelper;
 import cn.bdqn.his.common.response.Response;
 import cn.bdqn.his.common.response.ResponseEnum;
+import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * api调用demo

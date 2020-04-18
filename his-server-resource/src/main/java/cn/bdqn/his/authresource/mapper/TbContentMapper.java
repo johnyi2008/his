@@ -1,11 +1,12 @@
 package cn.bdqn.his.authresource.mapper;
 
-import cn.bdqn.his.authresource.domain.TbContent;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import cn.bdqn.his.authresource.domain.TbContent;
 
 /**
  * (TbContent)表数据库访问层
