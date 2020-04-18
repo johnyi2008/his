@@ -1,6 +1,11 @@
 package cn.bdqn.his.prescription.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -21,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cn.bdqn.his.common.http.HttpClientHelper;
 import cn.bdqn.his.common.response.Response;
 import cn.bdqn.his.common.response.ResponseEnum;
+import cn.bdqn.his.prescription.report.CreateReport;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,6 +46,16 @@ public class DemoController {
 
 	@Autowired private HttpClientHelper httpClientHelper;
 
+	@GetMapping("report")
+	public void report(HttpServletResponse response) {
+    	CreateReport report = new CreateReport();
+    	List<String> headList = Arrays.asList("序号","单号","药品名称","数量","采购成本");
+    	List<List<String>> dataList = new ArrayList<>();
+    	for (int i = 0; i < 10; i++) {
+			dataList.add(Arrays.asList("" + i,"1000" + i,"药品" + i,"" +i, "2.55"));
+		}
+    	report.createWorkBook(null, "a", headList, dataList, response, "报表测试.xls");
+	}
 	@GetMapping("api/medicine/findBy")
 	public Response medicineFindBy(Integer pageNum,Integer pageSize, Integer typeId, String name, HttpServletRequest request) {
 		CloseableHttpClient httpClient = null;
