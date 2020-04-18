@@ -1,5 +1,6 @@
 package cn.bdqn.his.common.http;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -99,11 +100,11 @@ public class HttpClientHelper {
 					nameValuePairs.add(new BasicNameValuePair(k, v.toString()));
 				}
 			});
-			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs,StandardCharsets.UTF_8));
 			response = httpClient.execute(httpPost);
 			HttpEntity httpEntity = response.getEntity();
 			if(httpEntity != null) {
-				String result = EntityUtils.toString(httpEntity);
+				String result = EntityUtils.toString(httpEntity,StandardCharsets.UTF_8);
 				if(log.isDebugEnabled()) {
 					log.debug("响应内容：{}",result);
 				}
