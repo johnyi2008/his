@@ -9,14 +9,21 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 import cn.bdqn.his.common.CusomCsrfMatcher;
 
-@EnableOAuth2Sso
-@Configuration
+/**
+ * 如果需要自定义security配置，开启注释掉的注解，同时移除启动类上的@EnableOAuth2Sso
+ */
+//@EnableWebSecurity(debug = true)
+//@EnableOAuth2Sso
+//@Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Resource private CusomCsrfMatcher cusomCsrfMatcher;
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().requireCsrfProtectionMatcher(cusomCsrfMatcher);
-		super.configure(http);
+		http
+				.authorizeRequests()
+				.anyRequest().authenticated();
+		//对受信任的主机不进行csrf过滤
+//		http.csrf().requireCsrfProtectionMatcher(cusomCsrfMatcher);
 	}
 
 }

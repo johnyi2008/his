@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @Slf4j
 public class CsrfFilterConfig {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Bean
 	public FilterRegistrationBean filterRegist() {
 		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();

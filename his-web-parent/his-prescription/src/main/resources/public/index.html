@@ -43,6 +43,9 @@
                 type: 'get',
                 dataType: 'json',
                 success: function (result) {
+                	if(result.code == '401') {
+                		alert('请先登录目标系统');
+                	}
                     result = result.responseBody;
                     $("#pageInfo").html("总记录数：" + result.total + ",总页数：" + result.pages + ",当前页:" + result.pageNum);
                     $("#list").html("");
@@ -69,6 +72,9 @@
                 type: 'get',
                 dataType: 'json',
                 success: function (result) {
+                	if(result.code == '401') {
+                		alert('请先登录目标系统');
+                	}
                     result = result.responseBody;
                     $("#pageInfo").html("总记录数：" + result.total + ",总页数：" + result.pages + ",当前页:" + result.pageNum);
                     $("#list").html("");

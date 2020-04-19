@@ -7,8 +7,7 @@ logging:
   level:
     cn:
       bdqn:
-        his:
-          medicine: debug
+        his: debug
     org:
       springframework:
         security: debug

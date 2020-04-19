@@ -88,8 +88,6 @@ public class PrescriptionController {
 //        CsrfToken _csrf = (CsrfToken) request.getAttribute("_csrf");
 //        params.put(_csrf.getParameterName(), _csrf.getToken());
         return httpClientHelper.postForResponse(serverMedicineUrl + "/api/medicines/findBy", params, CURRENT_SERVER_URL);
-        
-      
     }
     
   
